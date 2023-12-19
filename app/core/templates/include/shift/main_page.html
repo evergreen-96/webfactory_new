@@ -1,0 +1,144 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+    </style>
+
+    {#   прогресс бар #}
+    <div class="stepper-wrapper">
+        <div class="stepper-item active">
+            <div class="step-counter">
+                <img src="{% static 'images/selection_icon.png' %}" alt="Step 1">
+            </div>
+            <div class="step-name">Выбор станка</div>
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/qr_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/quat_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/setup_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/processing_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/ending_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+    </div>
+    {#   прогресс бар #}
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% for machine in machines %}
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="machine" value="{{ machine.id }}"
+                           {% if machine.is_broken %}disabled{% endif %}
+                           {% if machine.is_in_progress %}data-in-progress="true"{% endif %}
+                           {% if not machine.is_broken %}data-not-broken="true"{% endif %}>
+                    <label class="form-check-label">
+                        <span class="fw-bold">{{ machine.machine_name }} (ID: {{ machine.id }})</span><br>
+                        <span>{{ machine.machine_type }}</span>
+                        {% if machine.is_broken %}
+                            <span class="text-danger"> - BROKEN</span>
+                        {% endif %}
+                        {% if machine.is_in_progress %}
+                            <span class="text-success"> - Деталь: {{ machine.order_in_progress.part_name }} в работе</span>
+
+                            {% with any_machine_in_progress=True %}
+                            {% endwith %}
+                        {% endif %}
+                    </label>
+                </div>
+            {% endfor %}
+            {% for message in messages %}
+                {{ message }}
+
+            {% endfor %}
+
+
+            <form method="post" class="d-flex flex-column">
+                {% csrf_token %}
+                <input type="hidden" name="selected_machine_id" id="selectedMachineId" value="">
+                <button type="submit" name="continue" id="continueButton" class="btn btn-primary mb-2 flex-fill"
+                        disabled>
+                    Продолжить работу
+                </button>
+                <button type="submit" name="start_new" id="startNewButton" class="btn btn-success mb-2 flex-fill"
+                        {% if any_machine_in_progress or not any_machine_not_broken %}disabled{% endif %}>
+                    Начать новый заказ с выбранным станком
+                </button>
+                <button type="submit" name="stop_working" id="stopWorkingButton" class="btn btn-danger mb-2 flex-fill"
+                        disabled>
+                    Экстренное завершение работы
+                </button>
+                <button type="submit" name="end_shift" class="btn btn-secondary flex-fill">Закончить смену</button>
+            </form>
+
+            {% include "forms/justreport_form.html" %}
+        </div>
+    </div>
+
+    <script>
+
+            document.addEventListener("DOMContentLoaded", function () {
+        var continueButton = document.getElementById("continueButton");
+        var startNewButton = document.getElementById("startNewButton");
+        var stopWorkingButton = document.getElementById("stopWorkingButton");
+        var selectedMachineIdInput = document.getElementById("selectedMachineId");
+        var radios = document.querySelectorAll('input[type=radio][name=machine]');
+
+        function updateButtonStyling() {
+            continueButton.classList.toggle('btn-outline-primary', continueButton.disabled);
+            continueButton.classList.toggle('btn-primary', !continueButton.disabled);
+            startNewButton.classList.toggle('btn-outline-success', startNewButton.disabled);
+            startNewButton.classList.toggle('btn-success', !startNewButton.disabled);
+            stopWorkingButton.classList.toggle('btn-outline-danger', stopWorkingButton.disabled);
+            stopWorkingButton.classList.toggle('btn-danger', !stopWorkingButton.disabled);
+        }
+
+        radios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                continueButton.disabled = !(this.checked && this.getAttribute('data-in-progress') === 'true');
+                startNewButton.disabled = this.checked && (this.getAttribute('data-in-progress') === 'true' || this.getAttribute('data-broken') === 'true');
+                stopWorkingButton.disabled = !(this.checked && this.getAttribute('data-in-progress') === 'true');
+
+                // Additional check to enable the "start new" button
+                if (this.checked && this.getAttribute('data-in-progress') !== 'true' && this.getAttribute('data-broken') !== 'true') {
+                    startNewButton.disabled = false;
+                }
+
+                // Update the hidden field value with the selected machine ID
+                selectedMachineIdInput.value = this.value;
+
+                // Add or remove Bootstrap classes for button styling
+                updateButtonStyling();
+            });
+        });
+
+        // Initial setup to ensure buttons have no Bootstrap styling on page load
+        updateButtonStyling();
+    });
+
+    </script>
+
+{% endblock %}

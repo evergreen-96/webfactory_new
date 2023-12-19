@@ -1,0 +1,136 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+    {#   прогресс бар #}
+    <div class="stepper-wrapper">
+
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/selection_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item active">
+            <div class="step-counter">
+                <img src="{% static 'images/qr_icon.png' %}" alt="Step 1">
+            </div>
+            <div class="step-name">Название детали</div>
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/quat_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/setup_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/processing_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/ending_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+    </div>
+    {#   прогресс бар #}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Scan Form -->
+                <form id="scanForm" method="post" action="{% url 'shift_scan_page' %}" class="mb-4">
+                    {% csrf_token %}
+                    <label for="imageFile" class="form-label">Сделайте фото QR-кода и нажмите "Сканировать" для
+                        автоматического распознавания артикула</label>
+                    <div class="input-group mb-3">
+                        <!-- Скрытый input для выбора файла -->
+                        <input type="file" name="image" id="imageFile" capture="user" accept="image/*"
+                               class="form-control" style="display: none;">
+                        <!-- Кнопка "Сканировать" -->
+                        <button name="action" value="scan" class="btn btn-secondary w-100" type="button"
+                                onclick="document.getElementById('imageFile').click();">
+                            Сканировать
+                        </button>
+                    </div>
+                </form>
+                <!-- Spinner -->
+                <div class="spinner-container">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Подождите, идет распознавание</span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <form id="uploadForm" method="post">
+                    {% csrf_token %}
+                    <p class="lead mb-3">Или введите название вручную</p>
+                    <div class="input-group mb-3">
+                        <input type="text" name="partname" id="partname" value="" class="form-control">
+                        <button type="submit" id="sendBtn" class="btn btn-success w-100 mt-2">Продолжить</button>
+                    </div>
+                </form>
+                <form id='backBtn' method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="back" class="btn btn-dark w-100">Назад</button>
+                </form>
+            </div>
+        </div>
+        <!-- Static Progress Bar -->
+        <script>
+            document.getElementById('imageFile').addEventListener('change', async function () {
+                var formData = new FormData(document.getElementById('scanForm'));
+                var url = '/qr-decoder/';
+                var progressBarFill = document.querySelector('.progress-bar-fill');
+                var spinnerContainer = document.querySelector('.spinner-container');
+
+                spinnerContainer.style.display = 'block';
+
+                try {
+                    var response = await fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        var data = await response.text();
+                        if (data === "Ошибка в декодировании") {
+                            alert("QR код не распознан, попробуйте еще раз");
+                        } else {
+                            document.getElementById('partname').value = data;
+                        }
+                    } else {
+                        alert("Ошибка, попробуйте еще раз");
+                    }
+                } catch (error) {
+                    console.error('Ошибка при выполнении запроса:', error);
+                } finally {
+                    // Скрываем спиннер
+                    spinnerContainer.style.display = 'none';
+                }
+            });
+            document.getElementById('sendBtn').addEventListener('click', function (event) {
+                var partname = document.getElementById('partname').value.trim();
+
+                // Добавляем проверку на максимальную длину (255 символов)
+                if (partname === '') {
+                    alert('Поле не может быть пустым!');
+                    event.preventDefault();
+                } else if (partname.length > 1000) {
+                    alert('Значение не может превышать 1000 символов!');
+                    event.preventDefault();
+                }
+            });
+        </script>
+    </div>
+{% endblock %}

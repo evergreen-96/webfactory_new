@@ -1,0 +1,154 @@
+<hr>
+
+<!-- Bug Report Modal -->
+<div class="modal fade" id="bugReportModal" tabindex="-1" aria-labelledby="bugReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bugReportModalLabel">Сообщить о проблеме</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="reportForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="bugDescription" class="form-label">Описание проблемы</label>
+                        <textarea class="form-control" id="bugDescription" name="bug_description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100" id="stopWorkButton">Сообщить о проблеме и
+                        приостановить работу
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Успешно отправлено</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                Ваш отчет был успешно отправлен.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestModalLabel">Оставить обращение</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="requestForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="requestDescription" class="form-label">Описание обращения</label>
+                        <textarea class="form-control" id="requestDescription" name="request_description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary w-100" id="sendRequestButton">Отправить обращение
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bug Report Button -->
+<div class="container-md mt-2">
+    <button id="reportBtn" hidden type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#bugReportModal">Сообщить о проблеме, блокирующей работу</button>
+</div>
+
+<!-- Request Button -->
+<div class="container-md mt-2">
+    <button id="requestBtn" type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#requestModal">Оставить обращение</button>
+</div>
+{% if has_unsolved_reports %}
+<div class="container-md mt-2">
+    <a href="{% url 'reports_view' %}"
+       class="btn btn-primary w-100{% if not has_unsolved_reports %} disabled{% endif %}">Решить проблему</a>
+</div>
+{% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorModal = new bootstrap.Modal(document.getElementById('bugReportModal'));
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        var requestModal = new bootstrap.Modal(document.getElementById('requestModal'));
+
+        document.getElementById('reportBtn').addEventListener('click', function () {
+            errorModal.show();
+        });
+
+        document.getElementById('requestBtn').addEventListener('click', function () {
+            requestModal.show();
+        });
+
+        document.getElementById('stopWorkButton').addEventListener('click', function () {
+            event.preventDefault();
+            var formData = new FormData(document.getElementById('reportForm'));
+            if (formData.get('bug_description').trim() === '') {
+                alert('Введите описание проблемы');
+                return;
+            }
+            var url = '/report/';  // URL для обработки формы на сервере
+
+            if (event.currentTarget.id === 'stopWorkButton') {
+                url = '/report/';
+            } else if (event.currentTarget.id === 'requestBtn') {
+                url = '/request/';
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    errorModal.hide();  // Скрыть модальное окно после успешной отправки
+
+                    // Вывести уведомление о успешной отправке
+                    successModal.show();
+                    setTimeout(function () {
+                        successModal.hide();
+                    }, 1500)
+                }
+            };
+            xhr.send(formData);
+            setTimeout(function () {
+                window.location.href = '/reports/';
+            }, 1000)
+
+        });
+
+        document.getElementById('sendRequestButton').addEventListener('click', function () {
+            event.preventDefault();
+            var requestFormData = new FormData(document.getElementById('requestForm'));
+            if (requestFormData.get('request_description').trim() === '') {
+                alert('Введите описание обращения');
+                return;
+            }
+            var requestUrl = '/request/';  // URL для обработки формы на сервере
+
+            var requestXhr = new XMLHttpRequest();
+            requestXhr.open('POST', requestUrl, true);
+            requestXhr.onreadystatechange = function () {
+                if (requestXhr.readyState === 4) {
+                    requestModal.hide();  // Скрыть модальное окно после успешной отправки
+
+                    // Вывести уведомление о успешной отправке
+                    successModal.show();
+                    setTimeout(function () {
+                        successModal.hide();
+                    }, 1500)
+                }
+            };
+            requestXhr.send(requestFormData);
+        });
+    });
+</script>

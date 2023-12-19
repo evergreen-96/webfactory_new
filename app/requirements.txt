@@ -1,3 +1,16 @@
 Django==4.2.3
+djangorestframework
 gunicorn==21.2.0
 psycopg2-binary==2.9.6
+django-debug-toolbar==4.2.0
+Pillow
+pyzbar
+python-dotenv==1.0.0
+plotly==5.18.0
+pandas==2.1.3
+django-jazzmin
+openpyxl
+xlsxwriter
+
+celery==5.2.3
+redis==3.5.3

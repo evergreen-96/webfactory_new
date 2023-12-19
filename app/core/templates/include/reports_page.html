@@ -1,0 +1,195 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <style>
+
+    </style>
+    <div class="container-md mt-2">
+        <div id="btnContainer">
+            <a href="{% url 'shift_main_page' %}" class="btn btn-dark w-100 mt-2" id="returnToMainBtn">Вернуться на
+                главную</a>
+            <button class="btn btn-info mt-2" id="showSolvedBtn">Показать решенные проблемы</button>
+        </div>
+    </div>
+    <div class="container-md mt-2">
+        <div id="solvedReports" class="solved-reports">
+            {% for report in user_reports %}
+                {% if report.is_solved %}
+                    <div class="card mb-3 mt-2">
+                        <div class="card-header  bg-success">
+                            <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                                {{ report.bug_description }}
+
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th scope="row">Номер заказа</th>
+                                    <td>{{ report.order.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Описание проблемы</th>
+                                    <td>{{ report.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Время сообщения о проблеме</th>
+                                    <td>{{ report.start_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Время решения</th>
+                                    <td>{{ report.end_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Станок</th>
+                                    <td>{{ report.order.machine.machine_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Решена ли проблема?</th>
+                                    <td>Решена</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-footer edit-form" id="edit-form-{{ report.id }}"
+                             style="display: none;">
+                            <form method="post" class="bug-edit-form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="report_description">Описание проблемы</label>
+                                    <input type="text" class="form-control"
+                                           id="report_description" name="report_description"
+                                           value="{{ report.description }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="is_solved">Is Solved</label>
+                                    <input type="checkbox" class="form-check-input custom-checkbox"
+                                           id="is_solved" name="is_solved"
+                                           {% if report.is_solved %}checked{% endif %}>
+                                </div>
+                                <input type="hidden" name="bug_id" value="{{ report.id }}">
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="unsolvedReports">
+            {% for report in user_reports %}
+                {% if not report.is_solved %}
+                    <div class="card mb-3 mt-2">
+                        <div class="card-header bg-danger">
+                            <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                                {{ report.bug_description }}
+                                <button class="btn btn-primary btn-sm edit-bug-btn"
+                                        data-bug-id="{{ report.id }}">Решить проблему
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table">
+                                <tbody>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">Номер заказа</th>
+                                    <td>{{ report.order.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Описание проблемы</th>
+                                    <td>{{ report.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Время сообщения о проблеме</th>
+                                    <td>{{ report.start_time }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Станок</th>
+                                    <td>{{ report.order.machine.machine_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Решена ли проблема?</th>
+                                    <td>Не решена</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-footer edit-form" id="edit-form-{{ report.id }}"
+                             style="display: none;">
+                            <form method="post" class="bug-edit-form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="report_description">Описание проблемы</label>
+                                    <input type="text" class="form-control" id="report_description"
+                                           name="report_description" disabled value="{{ report.description }}">
+                                </div>
+                                <input type="hidden" name="bug_id" value="{{ report.id }}">
+                                <button type="button" class="btn btn-success update-button mt-3">Нажмите, если проблема
+                                    решена
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+
+        $(document).ready(function () {
+            $('.edit-bug-btn').click(function () {
+                var bugId = $(this).data('bug-id');
+                $('#edit-form-' + bugId).toggle();
+            });
+
+            $('.update-button').click(function () {
+                var bugId = $(this).closest('form').find('[name="bug_id"]').val();
+                var reportDescription = $(this).closest('form').find('[name="report_description"]').val();
+
+                updateBugStatus(bugId, reportDescription);
+            });
+
+            function updateBugStatus(bugId, reportDescription) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/reports/',
+                    headers: {
+                        'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()
+                    },
+                    data: {
+                        bug_id: bugId,
+                        report_description: reportDescription,
+                        is_solved: true
+                    },
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            alert('Bug successfully updated!');
+                            window.location.replace("/reports/");
+                        } else {
+                            alert('Error updating bug.');
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while updating the bug.');
+                    }
+                });
+            }
+
+            // Обработчик для кнопки "Show Solved"
+            $('#showSolvedBtn').click(function () {
+                $('#solvedReports').slideToggle();
+            });
+        });
+    </script>
+{% endblock %}

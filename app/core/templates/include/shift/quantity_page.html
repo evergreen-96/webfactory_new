@@ -1,0 +1,151 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+    
+{#   прогресс бар #}
+    <div class="stepper-wrapper">
+    
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/selection_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/qr_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item active">
+            <div class="step-counter">
+                <img src="{% static 'images/quat_icon.png' %}" alt="Step 1">
+            </div>
+            <div class="step-name">Количество</div>
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/setup_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/processing_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item">
+            <div class="step-counter">
+                <img src="{% static 'images/ending_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+    </div>
+    {#   прогресс бар #}
+
+    <div class="container">
+        <h4 class="mt-1">Название детали: {{ order.part_name }}</h4>
+        <h3 class="mt-3">Введите количество деталей:</h3>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" class="form-control" id="quantity"
+                       name="quantity"
+                       placeholder="Введите значение" inputmode="numeric">
+            </div>
+
+            <br>
+            <div class="btn-group d-grid gap-2" role="group" aria-label="Кнопки">
+                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                        onclick="updateValue('1')">1
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                        onclick="updateValue('2')">2
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                        onclick="updateValue('3')">3
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                        onclick="updateValue('4')">4
+                </button>
+            </div>
+
+            <!-- Добавляем скрытое поле для передачи значения кнопки -->
+            <input type="hidden" id="button" name="button" value="">
+
+            <div class="mt-4">
+                <button id="sendBtn" type="button" class="btn btn-success w-100">Продолжить</button>
+                <a href="{% url 'shift_scan_page' %}" class="btn btn-dark w-100 mt-2">Назад</a>
+                <br>
+                <button type="submit" name="pause_shift" class="btn btn-outline-danger w-100 mt-2">Перейти к выбору
+                    станка
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Модальное окно с подтверждением -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Подтверждение</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены, что хотите отправить значение: <span id="selected_value_confirmation"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-success" id="confirmButton"
+                            onclick="document.querySelector('form').submit();">Подтвердить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include "forms/bugreport_form.html" %}
+
+    <script>
+        // Функция, вызываемая при нажатии на кнопку
+        function updateValue(buttonValue) {
+            // Устанавливаем значение в поле input
+            document.getElementById('quantity').value = buttonValue;
+        }
+
+        // Функция, вызываемая при нажатии на кнопку "Отправить"
+        document.getElementById('sendBtn').addEventListener('click', function () {
+                var quantity = document.getElementById('quantity').value.trim();
+
+                // Добавляем проверку на максимальную длину (255 символов)
+                if (quantity === '') {
+                    alert('Поле не может быть пустым!');
+                    event.preventDefault();
+                } else if (quantity.length > 255) {
+                    alert('Значение не может превышать 255 символов!');
+                    event.preventDefault();
+                } else if (!/^\d+$/.test(quantity)) {
+                    // Проверка на наличие только цифр
+                    alert('Значение должно состоять только из цифр!');
+                    event.preventDefault();
+                } else {
+                    // Вариант с модалкой
+                    document.getElementById('selected_value_confirmation').innerText = quantity;
+                    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+                    confirmationModal.show();
+                }
+                {#    if (confirm('OK??') === true) {#}
+                {#        console.log('TRUE');#}
+                {#        document.querySelector('form').submit();#}
+                {#    }#}
+                {# }} #}
+            }
+        )
+
+
+    </script>
+
+{% endblock %}

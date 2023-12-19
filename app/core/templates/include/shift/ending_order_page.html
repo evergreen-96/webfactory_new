@@ -1,0 +1,78 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+{#   прогресс бар #}
+    <div class="stepper-wrapper">
+    
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/selection_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/qr_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/quat_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/setup_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item completed">
+            <div class="step-counter">
+                <img src="{% static 'images/processing_icon.png' %}" alt="Step 1">
+            </div>
+
+        </div>
+        <div class="stepper-item active">
+            <div class="step-counter">
+                <img src="{% static 'images/ending_icon.png' %}" alt="Step 1">
+            </div>
+            <div class="step-name">Завершение</div>
+        </div>
+    </div>
+    {#   прогресс бар #}
+    
+    <div class="container-md mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-1">
+                    <h5>Нажмите "Заказ на стеллаже готовой продукции", если деталь на стеллаже готовой продукции</h5>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Сейчас в работе:</h3>
+                        <table class="table">
+                            <tr>
+                                <td>Название детали:</td>
+                                <td>{{ order.part_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Общее количество:</td>
+                                <td>{{ order.num_parts }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success w-100">Заказ на стеллаже готовой продукции</button>
+                    <button type="submit" name="pause_shift" class="btn btn-outline-danger w-100 mt-2">Перейти к выбору
+                        станка
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include "forms/bugreport_form.html" %}
+{% endblock %}
