@@ -15,6 +15,7 @@ from core.models import CustomUserModel
 
 logger = logging.getLogger('django')
 
+
 @login_required(login_url='login')
 @user_passes_test(lambda u: u.is_superuser)
 def backup(request):
@@ -247,7 +248,7 @@ def order_scan_view(request):
 
 
 @login_required(login_url='/login/')
-def order_qauntity_view(request):
+def order_quantity_view(request):
     try:
         custom_user = CustomUserModel.objects.get(id=request.user.id)
         shift = get_last_or_create_shift(custom_user)

@@ -28,7 +28,7 @@ DEBUG = bool(os.environ.get("DEBUG", default=0))
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 ALLOWED_HOSTS = ('*',)
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
+CSRF_TRUSTED_ORIGINS = ('http://localhost:1337', 'http://127.0.0.1:1337')
 
 # Application definition
 
@@ -123,7 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'core/static'
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
