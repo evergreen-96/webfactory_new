@@ -1,0 +1,63 @@
+[
+  {
+    "model": "core.machinetypesmodel",
+    "pk": 1,
+    "fields": {
+      "machine_type": "test_machine_type"
+    }
+  },
+  {
+    "model": "core.machinemodel",
+    "pk": 1,
+    "fields": {
+      "machine_type": 1,
+      "machine_name": "test_machine",
+      "is_broken": false,
+      "is_in_progress": false
+    }
+  },
+    {
+    "model": "core.machinemodel",
+    "pk": 2,
+    "fields": {
+      "machine_type": 1,
+      "machine_name": "test_machine2",
+      "is_broken": false,
+      "is_in_progress": false
+    }
+  },
+  {
+    "model": "core.rolemodel",
+    "pk": 1,
+    "fields": {
+      "role_name": "admin"
+    }
+  },
+  {
+    "model": "core.positionsmodel",
+    "pk": 1,
+    "fields": {
+      "position_name": "test_position",
+      "chill_time": "00:00:05"
+    }
+  },
+  {
+    "model": "core.workingareamodel",
+    "pk": 1,
+    "fields": {
+      "area_name": "area_test"
+    }
+  },
+  {
+    "model": "core.customusermodel",
+    "pk": 1,
+    "fields": {
+      "phone_number": "89122184799",
+      "position": 1,
+      "role": 1,
+      "user": 1,
+      "working_area": 1,
+      "machine": [1, 2]
+    }
+  }
+]

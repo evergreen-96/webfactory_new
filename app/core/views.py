@@ -13,9 +13,7 @@ from core.forms import ReportEditForm
 from core.models import CustomUserModel
 
 
-
 logger = logging.getLogger('django')
-
 
 @login_required(login_url='login')
 @user_passes_test(lambda u: u.is_superuser)

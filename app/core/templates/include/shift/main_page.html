@@ -79,19 +79,19 @@
             <form method="post" class="d-flex flex-column">
                 {% csrf_token %}
                 <input type="hidden" name="selected_machine_id" id="selectedMachineId" value="">
-                <button type="submit" name="continue" id="continueButton" class="btn btn-primary mb-2 flex-fill"
+                <button type="submit" name="continue" id="continueButton" class="btn-lg btn btn-primary mb-2 flex-fill"
                         disabled>
                     Продолжить работу
                 </button>
-                <button type="submit" name="start_new" id="startNewButton" class="btn btn-success mb-2 flex-fill"
+                <button type="submit" name="start_new" id="startNewButton" class="btn-lg btn btn-success mb-2 flex-fill"
                         {% if any_machine_in_progress or not any_machine_not_broken %}disabled{% endif %}>
                     Начать новый заказ с выбранным станком
                 </button>
-                <button type="submit" name="stop_working" id="stopWorkingButton" class="btn btn-danger mb-2 flex-fill"
+                <button type="submit" name="stop_working" id="stopWorkingButton" class="btn-lg btn btn-danger mb-2 flex-fill"
                         disabled>
                     Экстренное завершение работы
                 </button>
-                <button type="submit" name="end_shift" class="btn btn-secondary flex-fill">Закончить смену</button>
+                <button type="submit" name="end_shift" class="btn-lg btn btn-secondary flex-fill">Закончить смену</button>
             </form>
 
             {% include "forms/justreport_form.html" %}

@@ -49,14 +49,14 @@
                 <!-- Scan Form -->
                 <form id="scanForm" method="post" action="{% url 'shift_scan_page' %}" class="mb-4">
                     {% csrf_token %}
-                    <label for="imageFile" class="form-label">Сделайте фото QR-кода и нажмите "Сканировать" для
-                        автоматического распознавания артикула</label>
+                    <label for="imageFile" class="form-label">Для автоматического определения артикула
+                        нажмите сканироватрь сделайте фото QR кода</label>
                     <div class="input-group mb-3">
                         <!-- Скрытый input для выбора файла -->
                         <input type="file" name="image" id="imageFile" capture="user" accept="image/*"
                                class="form-control" style="display: none;">
                         <!-- Кнопка "Сканировать" -->
-                        <button name="action" value="scan" class="btn btn-secondary w-100" type="button"
+                        <button name="action" value="scan" class="btn-lg btn btn-secondary w-100" type="button"
                                 onclick="document.getElementById('imageFile').click();">
                             Сканировать
                         </button>
@@ -74,15 +74,15 @@
             <div class="col-md-6">
                 <form id="uploadForm" method="post">
                     {% csrf_token %}
-                    <p class="lead mb-3">Или введите название вручную</p>
+                    <label class="form-label">Или введите вручную</label>
                     <div class="input-group mb-3">
                         <input type="text" name="partname" id="partname" value="" class="form-control">
-                        <button type="submit" id="sendBtn" class="btn btn-success w-100 mt-2">Продолжить</button>
+                        <button type="submit" id="sendBtn" class="btn-lg btn btn-success w-100 mt-2">Продолжить</button>
                     </div>
                 </form>
                 <form id='backBtn' method="post">
                     {% csrf_token %}
-                    <button type="submit" name="back" class="btn btn-dark w-100">Назад</button>
+                    <button type="submit" name="back" class="btn-lg btn btn-dark w-100">Назад</button>
                 </form>
             </div>
         </div>

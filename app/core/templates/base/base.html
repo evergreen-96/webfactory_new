@@ -219,37 +219,12 @@
     <div class="row">
         <div class="col-md-12">
             {% if custom_user %}
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#navbarNav"
-                                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">WebFactory</a>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link">{{ custom_user.user }}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">Должность: {{ custom_user.position }}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">Рабочая зона: {{ custom_user.working_area }}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">Роль: {{ custom_user.role }}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <p class="lead" id="current-time">Текущее время: Loading...</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+                <div class="text-center">
+                    <p class="lead">Вы авторизованы как: {{ custom_user.user }}</p>
+                    <p class="lead" id="current-time">Текущее время: Loading...</p>
+                </div>
             {% else %}
-                <h1 class="display-4">Выполните вход в систему</h1>
+                <h1 class="display-4 text-center">Выполните вход в систему</h1>
             {% endif %}
         </div>
     </div>

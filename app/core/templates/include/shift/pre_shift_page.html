@@ -1,20 +1,33 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <form method="post" class="mt-3">
-        {% csrf_token %}
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти из системы</a>
-
-            {% if is_last_shift_ended %}
-                <!-- If the last shift is ended, display the "Начать смену" button -->
-                <button type="submit" name="start_shift" class="btn btn-primary ml-2">Начать смену</button>
-            {% else %}
-                <!-- If the last shift is not ended, display the "Продолжить работу" button -->
-                <button type="submit" name="start_shift" class="btn btn-success ml-2">Продолжить работу</button>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'login' %}" class="btn btn-success">Авторизоваться</a>
-        {% endif %}
-    </form>
+    <div class="container mt-3">
+        <form method="post">
+            {% csrf_token %}
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-lg square-btn">Выйти из системы</a>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn btn-success btn-lg square-btn">Авторизоваться</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_authenticated %}
+                                {% if is_last_shift_ended %}
+                                    <!-- If the last shift is ended, display the "Начать смену" button -->
+                                    <button type="submit" name="start_shift" class="btn btn-primary btn-lg square-btn">Начать смену</button>
+                                {% else %}
+                                    <!-- If the last shift is not ended, display the "Продолжить работу" button -->
+                                    <button type="submit" name="start_shift" class="btn btn-success btn-lg square-btn">Продолжить работу</button>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
 {% endblock %}

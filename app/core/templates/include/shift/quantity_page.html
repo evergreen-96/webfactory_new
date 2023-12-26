@@ -58,16 +58,16 @@
 
             <br>
             <div class="btn-group d-grid gap-2" role="group" aria-label="Кнопки">
-                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                <button type="button" class="btn-lg btn btn-outline-primary btn-lg w-100 rounded"
                         onclick="updateValue('1')">1
                 </button>
-                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                <button type="button" class="btn-lg btn btn-outline-primary btn-lg w-100 rounded"
                         onclick="updateValue('2')">2
                 </button>
-                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                <button type="button" class="btn-lg btn btn-outline-primary btn-lg w-100 rounded"
                         onclick="updateValue('3')">3
                 </button>
-                <button type="button" class="btn btn-outline-primary btn-lg w-100 rounded"
+                <button type="button" class="btn-lg btn btn-outline-primary btn-lg w-100 rounded"
                         onclick="updateValue('4')">4
                 </button>
             </div>
@@ -76,10 +76,10 @@
             <input type="hidden" id="button" name="button" value="">
 
             <div class="mt-4">
-                <button id="sendBtn" type="button" class="btn btn-success w-100">Продолжить</button>
-                <a href="{% url 'shift_scan_page' %}" class="btn btn-dark w-100 mt-2">Назад</a>
+                <button id="sendBtn" type="button" class="btn-lg btn btn-success w-100">Продолжить</button>
+                <a href="{% url 'shift_scan_page' %}" class="btn-lg btn btn-dark w-100 mt-2">Назад</a>
                 <br>
-                <button type="submit" name="pause_shift" class="btn btn-outline-danger w-100 mt-2">Перейти к выбору
+                <button type="submit" name="pause_shift" class="btn-lg btn btn-outline-danger w-100 mt-2">Перейти к выбору
                     станка
                 </button>
             </div>
@@ -96,7 +96,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Вы уверены, что хотите отправить значение: <span id="selected_value_confirmation"></span>?
+                    <b>В работе заказ: </b> {{ order.part_name }}.<br> <b>В количестве:</b> <span id="selected_value_confirmation"></span>?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>

@@ -15,7 +15,7 @@
                         <label for="bugDescription" class="form-label">Описание проблемы</label>
                         <textarea class="form-control" id="bugDescription" name="bug_description" rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-danger w-100" id="stopWorkButton">Сообщить о проблеме и
+                    <button type="submit" class="btn-lg btn btn-danger w-100" id="stopWorkButton">Сообщить о проблеме и
                         приостановить работу
                     </button>
                 </form>
@@ -54,7 +54,7 @@
                         <label for="requestDescription" class="form-label">Описание обращения</label>
                         <textarea class="form-control" id="requestDescription" name="request_description" rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-secondary w-100" id="sendRequestButton">Отправить обращение
+                    <button type="submit" class="btn-lg btn btn-secondary w-100" id="sendRequestButton">Отправить обращение
                     </button>
                 </form>
             </div>
@@ -64,12 +64,12 @@
 
 <!-- Bug Report Button -->
 <div class="container-md mt-2">
-    <button id="reportBtn" hidden type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#bugReportModal">Сообщить о проблеме, блокирующей работу</button>
+    <button id="reportBtn" hidden type="button" class="btn-lg btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#bugReportModal">Сообщить о проблеме, блокирующей работу</button>
 </div>
 
 <!-- Request Button -->
 <div class="container-md mt-2">
-    <button id="requestBtn" type="button" class="btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#requestModal">Оставить обращение</button>
+    <button id="requestBtn" type="button" class="btn-lg btn btn-secondary w-100" data-bs-toggle="modal" data-bs-target="#requestModal">Оставить обращение</button>
 </div>
 {% if has_unsolved_reports %}
 <div class="container-md mt-2">
