@@ -28,6 +28,8 @@ DEBUG = bool(os.environ.get("DEBUG", default=0))
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 ALLOWED_HOSTS = ('*',)
 
+CSRF_TRUSTED_ORIGINS = ('http://localhost:1337', 'http://127.0.0.1:1337', 'http://212.109.199.168:1337')
+
 # Application definition
 
 INSTALLED_APPS = [
